@@ -11,20 +11,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.alura.superCompras.ui.theme.SuperComprasTheme
 import br.alura.superCompras.ui.theme.Typography
+import br.alura.superCompras.ui.theme.azulMeio
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,16 +40,11 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column {
                         imagemTopo(modifier = Modifier.padding(innerPadding))
-                        Titulo(
-                            texto = "Gerenciando Clientes",
-                            modifier = Modifier.padding(innerPadding)
-                        )
-                        Titulo(
-                            texto = "Escolha qual seleção",
-                            modifier = Modifier.padding(innerPadding)
-                        )
-                        itemDaLista(modifier = Modifier.padding(innerPadding))
 
+                        Titulo(texto = "Gerenciando Clientes",modifier = Modifier.padding(innerPadding))
+
+                        Titulo(texto = "Escolha qual seleção", modifier = Modifier.padding(innerPadding))
+                        itemDaLista(modifier = Modifier.padding(innerPadding))
 
                     }
                 }
@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
         Image(
             painter = painterResource(R.drawable.logo),
             contentDescription = null,
-            modifier = modifier.size(160.dp)
+            modifier = modifier.size(137.dp, height = 32.dp)
         )
     }
 
@@ -72,14 +72,14 @@ class MainActivity : ComponentActivity() {
 
 
     @Composable
-    fun icone(icone: ImageVector, modifier: Modifier = Modifier) {
-        Icon(icone, contentDescription = "Editar", modifier = modifier)
+    fun Icone(icone: ImageVector, modifier: Modifier = Modifier) {
+        Icon(icone, contentDescription = "Editar", modifier = modifier, tint = azulMeio)
     }
 
 
     @Composable
     fun itemDaLista(modifier: Modifier = Modifier) {
-        Row {
+        Row (verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = false,
                 onCheckedChange = {},
@@ -90,13 +90,10 @@ class MainActivity : ComponentActivity() {
                 style = Typography.bodyMedium,
                 textAlign = TextAlign.Center
             )
+            Icone(Icons.Default.Delete, modifier = modifier.size(16.dp))
+            Icone(Icons.Default.Edit, modifier = modifier.size(16.dp))
 
-            Checkbox(checked = false, onCheckedChange = {}, modifier = modifier)
-            Text(text = "Suco", style = Typography.bodyMedium, modifier = modifier)
-            Checkbox(checked = false, onCheckedChange = {}, modifier = modifier)
-            Text(text = "Suco", style = Typography.bodyMedium, modifier = modifier)
         }
-
     }
 
 
@@ -129,9 +126,9 @@ class MainActivity : ComponentActivity() {
 
     @Preview
     @Composable
-    private fun icone() {
+    private fun Icone() {
         SuperComprasTheme {
-            icone(Icons.Default.Delete)
+            Icone(Icons.Default.Delete)
         }
 
     }
