@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.alura.superCompras.ui.theme.SuperComprasTheme
@@ -34,10 +35,15 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column {
                         imagemTopo(modifier = Modifier.padding(innerPadding))
-                        Titulo(texto = "Gerenciando Clientes", modifier = Modifier.padding(innerPadding))
-                        Titulo(texto = "Escolha qual seleção", modifier = Modifier.padding(innerPadding))
+                        Titulo(
+                            texto = "Gerenciando Clientes",
+                            modifier = Modifier.padding(innerPadding)
+                        )
+                        Titulo(
+                            texto = "Escolha qual seleção",
+                            modifier = Modifier.padding(innerPadding)
+                        )
                         itemDaLista(modifier = Modifier.padding(innerPadding))
-
 
 
                     }
@@ -61,7 +67,7 @@ class MainActivity : ComponentActivity() {
         SuperComprasTheme {
             imagemTopo()
         }
-        
+
     }
 
 
@@ -71,20 +77,28 @@ class MainActivity : ComponentActivity() {
     }
 
 
-
     @Composable
     fun itemDaLista(modifier: Modifier = Modifier) {
         Row {
+            Checkbox(
+                checked = false,
+                onCheckedChange = {},
+                modifier = modifier.padding(end = 8.dp))
+            Text(
+                text = "Suco",
+                modifier = modifier,
+                style = Typography.bodyMedium,
+                textAlign = TextAlign.Center
+            )
 
-        Checkbox(checked = false, onCheckedChange = {}, modifier = modifier)
-            Text(text = "Suco", style = Typography.bodyMedium,modifier = modifier)
             Checkbox(checked = false, onCheckedChange = {}, modifier = modifier)
-            Text(text = "Suco", style = Typography.bodyMedium,modifier = modifier)
+            Text(text = "Suco", style = Typography.bodyMedium, modifier = modifier)
             Checkbox(checked = false, onCheckedChange = {}, modifier = modifier)
-            Text(text = "Suco", style = Typography.bodyMedium,modifier = modifier)
+            Text(text = "Suco", style = Typography.bodyMedium, modifier = modifier)
         }
 
     }
+
 
     @Preview
     @Composable
@@ -97,7 +111,7 @@ class MainActivity : ComponentActivity() {
 
 
     @Composable
-    fun Titulo(texto:String, modifier: Modifier = Modifier) {
+    fun Titulo(texto: String, modifier: Modifier = Modifier) {
         Text(
             text = texto, style = Typography.headlineLarge, modifier = modifier
         )
