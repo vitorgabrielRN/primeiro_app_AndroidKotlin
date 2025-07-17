@@ -10,11 +10,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -69,14 +67,6 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-    @Preview
-    @Composable
-    private fun ImagemTopo() {
-        SuperComprasTheme {
-            ImagemTopo()
-        }
-
-    }
 
 
     @Composable
@@ -102,7 +92,7 @@ class MainActivity : ComponentActivity() {
             )
             Text(
                 text = "Suco",
-                modifier = modifier,
+                modifier = Modifier.weight(1f),
                 style = Typography.bodyMedium,
                 textAlign = TextAlign.Center
             )
@@ -137,20 +127,30 @@ class MainActivity : ComponentActivity() {
 
     }
 
-    @Preview
-    @Composable
-    private fun TituloPreview() {
-        SuperComprasTheme {
-            Titulo(texto = " Gerenciamneto")
-        }
-
-    }
 
     @Preview
     @Composable
     private fun Icone() {
         SuperComprasTheme {
             Icone(Icons.Default.Delete)
+        }
+
+    }
+
+    @Preview
+    @Composable
+    private fun ImagemTopo() {
+        SuperComprasTheme {
+            ImagemTopo()
+        }
+
+    }
+
+    @Preview
+    @Composable
+    private fun TituloPreview() {
+        SuperComprasTheme {
+            Titulo(texto = " Gerenciamneto")
         }
 
     }
