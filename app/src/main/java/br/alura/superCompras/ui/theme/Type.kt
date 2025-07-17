@@ -20,8 +20,8 @@ val Typography = Typography(
         fontFamily = FontFamily.Monospace,
         fontWeight = FontWeight.Normal,
         color = azulClaro,
-        fontSize = 10.sp,
-        lineHeight = 14.sp,
+        fontSize = 20.sp,
+        lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
     bodyMedium = TextStyle(
@@ -35,9 +35,9 @@ val Typography = Typography(
     labelSmall = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
-        color = marinho,
-        fontSize = 25.sp,
-        lineHeight = 30.sp,
+        color = azulEscuro,
+        fontSize = 20.sp,
+        lineHeight = 14.sp,
         letterSpacing = 0.5.sp
     )
 
