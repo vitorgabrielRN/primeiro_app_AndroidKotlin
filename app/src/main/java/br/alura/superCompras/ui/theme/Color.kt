@@ -10,9 +10,10 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-val azulClaro = Color(0xFF85C4FF)
-val azulMeio = Color(0xFF339CFF)
-val azulEscuro = Color(0xFF0B3B60)
-val marinho = Color(0xFF00213D)
+//Correcao de cores
+val cinzaClaro = Color(0xFFF9F9F9)
+val coral = Color(0xFFF55B64)
 val erro = Color(0xFF893131)
+val marinho = Color(0xFF131730)
 val fundoTela = Color(0xFFFFFFFF)
+

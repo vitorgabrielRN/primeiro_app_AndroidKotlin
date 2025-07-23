@@ -5,21 +5,28 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -27,30 +34,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.alura.superCompras.ui.theme.SuperComprasTheme
 import br.alura.superCompras.ui.theme.Typography
-import br.alura.superCompras.ui.theme.azulMeio
+import br.alura.superCompras.ui.theme.coral
+import br.alura.superCompras.ui.theme.marinho
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            SuperComprasTheme {
+            SuperComprasTheme (){
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column {
-
-                        ImagemTopo(modifier = Modifier.padding(innerPadding))
-
+                    Column(verticalArrangement = Arrangement.Top, modifier = Modifier.padding(innerPadding)
+                    ) {
+                        ImagemTopo()
+                        AdicionarItem()
                         Titulo(
                             texto = "Gerenciando Clientes",
-                            modifier = Modifier.padding(innerPadding)
                         )
-
                         Titulo(
                             texto = "Escolha qual seleção",
-                            modifier = Modifier.padding(innerPadding)
                         )
-
-                        ItemDaLista(modifier = Modifier.padding(innerPadding))
+                        ItemDaLista()
 
                     }
                 }
@@ -61,12 +65,11 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun ImagemTopo(modifier: Modifier = Modifier) {
         Image(
-            painter = painterResource(R.drawable.logo),
+            painter = painterResource(R.drawable.paperbagwithgroceries1),
             contentDescription = null,
-            modifier = modifier.size(137.dp, height = 32.dp)
+            modifier = modifier.size(160.dp, height = 160.dp)
         )
     }
-
 
 
     @Composable
@@ -74,7 +77,7 @@ class MainActivity : ComponentActivity() {
         Icon(
             icone, contentDescription = "Editar",
             modifier = modifier,
-            tint = azulMeio
+            tint = coral
         )
     }
 
@@ -82,12 +85,14 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun ItemDaLista(modifier: Modifier = Modifier) {
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
             Checkbox(
                 checked = false,
                 onCheckedChange = {},
                 modifier = modifier
-                    .padding(end = 200.dp)
+                    .padding(end = 20.dp)
                     .size(19.dp)
             )
             Text(
@@ -99,23 +104,29 @@ class MainActivity : ComponentActivity() {
             Icone(Icons.Default.Delete, modifier = modifier.size(16.dp))
             Icone(Icons.Default.Edit, modifier = modifier.size(16.dp))
         }
-        Text("Gerenciamento de clientes",
+        Text(
+            "Gerenciamento de clientes",
             Modifier.padding(top = 1.dp),
             style = Typography.labelSmall,
-            color = azulMeio)
+            color = marinho
+        )
     }
 
-
-    @Preview
     @Composable
-    private fun ItemDaLista() {
-        SuperComprasTheme {
-            ItemDaLista()
-        }
-
+    fun AdicionarItem(modifier: Modifier = Modifier) {
+        var texto = rememberSaveable()  { mutableStateOf("") }
+        OutlinedTextField(
+            value = texto.value,
+            onValueChange = { texto.value = it },
+            placeholder = {Text("Digite a sua compra",
+                color = Color.Gray,
+                style = Typography.bodyMedium)
+        },
+            modifier = modifier.fillMaxWidth().padding(8.dp),
+            singleLine = true,
+            shape = RoundedCornerShape(24.dp)
+        )
     }
-
-
     @Composable
     fun Titulo(texto: String, modifier: Modifier = Modifier) {
 
@@ -130,7 +141,30 @@ class MainActivity : ComponentActivity() {
 
     @Preview
     @Composable
-    private fun Icone() {
+    private fun AdicionarItempreview() {
+        SuperComprasTheme {
+            AdicionarItem()
+        }
+
+    }
+
+
+    @Preview
+    @Composable
+    private fun ItemDaListapreview() {
+        SuperComprasTheme {
+            ItemDaLista()
+        }
+
+    }
+
+
+
+
+
+    @Preview
+    @Composable
+    private fun Iconepreview() {
         SuperComprasTheme {
             Icone(Icons.Default.Delete)
         }
@@ -139,7 +173,7 @@ class MainActivity : ComponentActivity() {
 
     @Preview
     @Composable
-    private fun ImagemTopo() {
+    private fun ImagemTopoPreview() {
         SuperComprasTheme {
             ImagemTopo()
         }
@@ -155,21 +189,5 @@ class MainActivity : ComponentActivity() {
 
     }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun GreetingPreview() {
-        SuperComprasTheme {
-            Greeting("Android")
-        }
-    }
-}
-
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello Vitor!",
-        modifier = modifier
-    )
 }
 
