@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -48,6 +49,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         ImagemTopo()
                         AdicionarItem()
+                        BotaoSalvarItem(onclick = {})
                         Titulo(
                             texto = "Gerenciando Clientes",
                         )
@@ -55,6 +57,7 @@ class MainActivity : ComponentActivity() {
                             texto = "Escolha qual seleção",
                         )
                         ItemDaLista()
+
 
                     }
                 }
@@ -122,11 +125,30 @@ class MainActivity : ComponentActivity() {
                 color = Color.Gray,
                 style = Typography.bodyMedium)
         },
-            modifier = modifier.fillMaxWidth().padding(8.dp),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(8.dp),
             singleLine = true,
             shape = RoundedCornerShape(24.dp)
         )
     }
+
+    @Composable
+    fun BotaoSalvarItem(onclick:()-> Unit,modifier: Modifier = Modifier) {
+     Button(shape = RoundedCornerShape(24.dp),
+         onClick = onclick,
+         modifier = modifier,
+
+         ) {
+         Text(text = "Salvar item", color = Color.White
+         )
+
+     }
+    }
+
+
+
+
     @Composable
     fun Titulo(texto: String, modifier: Modifier = Modifier) {
 
@@ -158,7 +180,13 @@ class MainActivity : ComponentActivity() {
 
     }
 
-
+    @Preview
+    @Composable
+    private fun BotaoSalvarPreview() {
+        SuperComprasTheme {
+            BotaoSalvarItem(onclick = {})
+        }
+    }
 
 
 
