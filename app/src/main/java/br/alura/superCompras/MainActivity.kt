@@ -143,7 +143,8 @@ fun ListaDeItems(
     aoEditarItem: (item: ItemCompra, novoTexto: String) -> Unit = {_, _ ->},
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier) {
         lista.forEach { item ->
             ItemDaLista(
                 item = item,
@@ -178,8 +179,9 @@ fun AdicionarItem(aoSalvarItem: (item: ItemCompra) -> Unit, modifier: Modifier =
     Button(
         shape = RoundedCornerShape(24.dp),
         onClick = {
-            aoSalvarItem(ItemCompra(texto, false, getDataHora()))
-            texto = ""
+            aoSalvarItem(ItemCompra(texto,
+                false, getDataHora()))
+            texto = " "
         },
         modifier = modifier
     ) {
@@ -200,7 +202,10 @@ fun getDataHora(): String {
 
 @Composable
 fun Titulo(texto: String, modifier: Modifier = Modifier) {
-    Text(text = texto, style = Typography.headlineLarge, modifier = modifier)
+    Text(
+        text = texto,
+        style = Typography.headlineLarge,
+        modifier = modifier)
 }
 
 @Composable
@@ -244,7 +249,9 @@ fun ItemDaLista(
                         edicao = false
                     }
                 ) {
-                    Icone(Icons.Default.Done, modifier = Modifier.size(16.dp))
+                    Icone(
+                        Icons.Default.Done,
+                        modifier = Modifier.size(16.dp))
                 }
             } else {
                 Text(
@@ -269,7 +276,9 @@ fun ItemDaLista(
                     edicao = true
                 }
             ) {
-                Icone(Icons.Default.Edit, modifier = Modifier.size(16.dp))
+                Icone(
+                    Icons.Default.Edit,
+                    modifier = Modifier.size(16.dp))
             }
         }
         Text(
@@ -291,7 +300,10 @@ fun ImagemTopo(modifier: Modifier = Modifier) {
 
 @Composable
 fun Icone(icone: ImageVector, modifier: Modifier = Modifier) {
-    Icon(icone, contentDescription = "Editar", modifier = modifier, tint = marinho)
+    Icon(
+        icone, contentDescription = "Editar",
+        modifier = modifier, tint = marinho
+    )
 }
 
 @Composable
@@ -314,7 +326,10 @@ private fun AdicionarItemPreview() {
 @Composable
 fun ItemDaListaPreview() {
     SuperComprasTheme {
-        ItemDaLista(item = ItemCompra("Suco", false, "Segunda-feira"))
+        ItemDaLista(item = ItemCompra(
+            "Suco",
+            false,
+            "Segunda-feira"))
     }
 }
 
