@@ -1,5 +1,8 @@
 package br.alura.superCompras
 
+
+
+import br.alura.superCompras.ui.theme.SuperComprasTheme
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,20 +16,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,205 +43,315 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.alura.superCompras.ui.theme.SuperComprasTheme
 import br.alura.superCompras.ui.theme.Typography
-import br.alura.superCompras.ui.theme.coral
 import br.alura.superCompras.ui.theme.marinho
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            SuperComprasTheme (){
+            SuperComprasTheme() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                      ListaDeCompras(Modifier.padding(innerPadding))
+                    ListaDeCompras(Modifier.padding(innerPadding))
                 }
             }
         }
     }
+}
 
-    @Composable
-    fun ListaDeCompras(modifier: Modifier = Modifier) {
-        var ListaDeItens = rememberSaveable { mutableListOf<ItemDeCompra>()}
+@Composable
+fun ListaDeCompras(modifier: Modifier = Modifier) {
+    var listaDeItens by rememberSaveable { mutableStateOf(listOf<ItemCompra>()) }
 
-        Column(
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding()) {
-
-            ImagemTopo()
-
-            AdicionarItem( salvarItem = {
-                ListaDeItens.add(ItemDeCompra(Texto = "Suco"))
-            })
-
-            Spacer( Modifier.height(48.dp))
-
-            Titulo(
-                texto = "Lista de compras",
-            )
-            Column {
-                    ListaDeItens.forEach{ item ->
-                        ItemDaLista(item)
+    Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        ImagemTopo()
+        AdicionarItem(aoSalvarItem = { novoItem ->
+            listaDeItens = listaDeItens + novoItem
+        })
+        Spacer(modifier = Modifier.height(48.dp))
+        Titulo(
+            texto = "Lista de Compras",
+        )
+        ListaDeItems(
+            lista = listaDeItens.filter { !it.foiComprado },
+            aoMudarStatus = { itemSelecionado ->
+                listaDeItens = listaDeItens.map { itemMap ->
+                    if (itemSelecionado == itemMap) {
+                        itemSelecionado.copy(foiComprado = !itemSelecionado.foiComprado)
+                    } else {
+                        itemMap
                     }
-            }
-            Titulo(
-                texto = "Comprado",
-            )
-        }
-
-    }
-
-    @Composable
-    fun AdicionarItem( salvarItem: (texto:String) -> Unit,modifier: Modifier = Modifier) {
-        var texto = rememberSaveable()  { mutableStateOf(" ") }
-        OutlinedTextField(
-            value = texto.value,
-            onValueChange = { texto.value = it },
-            placeholder = {Text("Digite a sua compra",
-                color = Color.Gray,
-                style = Typography.bodyMedium)
-        },
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            singleLine = true,
-            shape = RoundedCornerShape(24.dp)
-        )
-
-        Button(
-            shape = RoundedCornerShape(24.dp),
-            onClick = {
-                salvarItem(texto.value)
-                texto.value = ""
+                }
             },
-            modifier = modifier
-
-            ) {
-            Text(text = "Salvar item",
-                color = Color.White,
-                style = Typography.bodyMedium,
-                modifier =   Modifier.padding(horizontal = 8.dp, vertical = 6.dp)
-            )
-
+            aoRemoverItem = { itemRemovido ->
+                listaDeItens = listaDeItens - itemRemovido
+            },
+            aoEditarItem = { itemEditado, novoTexto ->
+                listaDeItens = listaDeItens.map { itemAtual ->
+                    if (itemAtual == itemEditado) {
+                        itemAtual.copy(texto = novoTexto)
+                    } else {
+                        itemAtual
+                    }
+                }
             }
+        )
 
-    }
+        Titulo(texto = "Comprado")
 
-    @Composable
-    fun ItemDaLista(item: ItemDeCompra,modifier: Modifier = Modifier) {
-
-
-        Row(verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Checkbox(
-                checked = false,
-                onCheckedChange = {},
-                modifier = modifier
-                    .padding(end = 20.dp)
-                    .size(19.dp)
+        if (listaDeItens.any { it.foiComprado }) {
+            ListaDeItems(
+                lista = listaDeItens.filter { it.foiComprado },
+                aoMudarStatus = { itemSelecionado ->
+                    listaDeItens = listaDeItens.map { itemMap ->
+                        if (itemSelecionado == itemMap) {
+                            itemSelecionado.copy(foiComprado = !itemSelecionado.foiComprado)
+                        } else {
+                            itemMap
+                        }
+                    }
+                },
+                aoRemoverItem = { itemRemovido ->
+                    listaDeItens = listaDeItens - itemRemovido
+                },
+                aoEditarItem = { itemEditado, novoTexto ->
+                    listaDeItens = listaDeItens.map { itemAtual ->
+                        if (itemAtual == itemEditado) {
+                            itemAtual.copy(texto = novoTexto)
+                        } else {
+                            itemAtual
+                        }
+                    }
+                }
             )
-            Text(
-                text = item.Texto,
-                modifier = Modifier.weight(1f),
-                style = Typography.bodyMedium,
-                textAlign = TextAlign.Start,
-
-                )
-            Icone(Icons.Default.Delete, modifier = modifier.size(20.dp))
-            Icone(Icons.Default.Edit, modifier = modifier.size(20.dp))
         }
-        Text(
-            " ",
-            Modifier.padding(top = 1.dp),
-            style = Typography.labelSmall,
-            color = coral
-        )
-    }
-
-
-    @Composable
-    fun ImagemTopo(modifier: Modifier = Modifier) {
-        Image(
-            painter = painterResource(R.drawable.paperbagwithgroceries1),
-            contentDescription = null,
-            modifier = modifier.size(160.dp, height = 160.dp)
-        )
-    }
-
-
-    @Composable
-    fun Icone(icone: ImageVector, modifier: Modifier = Modifier) {
-        Icon(
-            icone, contentDescription = "Editar",
-            modifier = modifier,
-            tint = marinho,
-
-            )
-    }
-
-    @Composable
-    fun Titulo(texto: String, modifier: Modifier = Modifier) {
-
-        Text(
-            text = texto,
-            style = Typography.headlineLarge,
-            modifier = modifier,
-            color = coral
-        )
-
-    }
-
-    @Preview
-    @Composable
-    private fun AdicionarItempreview() {
-        SuperComprasTheme {
-            AdicionarItem(salvarItem = {})
-        }
-
-    }
-
-
-    @Preview
-    @Composable
-    private fun ItemDaListapreview() {
-        SuperComprasTheme {
-            ItemDaLista(item = ItemDeCompra(Texto = "Suco"))
-        }
-
-    }
-
-    @Preview
-    @Composable
-    private fun Iconepreview() {
-        SuperComprasTheme {
-            Icone(Icons.Default.Delete)
-        }
-
-    }
-
-    @Preview
-    @Composable
-    private fun ImagemTopoPreview() {
-        SuperComprasTheme {
-            ImagemTopo()
-        }
-
-    }
-
-    @Preview
-    @Composable
-    private fun TituloPreview() {
-        SuperComprasTheme {
-            Titulo(texto = " lista de compras")
-        }
-
     }
 }
 
-data class ItemDeCompra(
-    val Texto:String
+@Composable
+fun ListaDeItems(
+    lista: List<ItemCompra>,
+    aoMudarStatus: (item: ItemCompra) -> Unit = {},
+    aoRemoverItem: (item: ItemCompra) -> Unit = {},
+    aoEditarItem: (item: ItemCompra, novoTexto: String) -> Unit = {_, _ ->},
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        lista.forEach { item ->
+            ItemDaLista(
+                item = item,
+                aoMudarStatus = aoMudarStatus,
+                aoRemoverItem = aoRemoverItem,
+                aoEditarItem = aoEditarItem
+            )
+        }
+    }
+}
+
+@Composable
+fun AdicionarItem(aoSalvarItem: (item: ItemCompra) -> Unit, modifier: Modifier = Modifier) {
+    var texto by rememberSaveable { mutableStateOf("") }
+    OutlinedTextField(
+        value = texto,
+        onValueChange = { texto = it },
+        placeholder = {
+            Text(
+                text = "Digite o item que deseja adicionar",
+                color = Color.Gray,
+                style = Typography.bodyMedium
+            )
+        },
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        singleLine = true,
+        shape = RoundedCornerShape(24.dp)
     )
 
+    Button(
+        shape = RoundedCornerShape(24.dp),
+        onClick = {
+            aoSalvarItem(ItemCompra(texto, false, getDataHora()))
+            texto = ""
+        },
+        modifier = modifier
+    ) {
+        Text(
+            text = "Salvar item",
+            color = Color.White,
+            style = Typography.bodyLarge,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+        )
+    }
+}
+
+fun getDataHora(): String {
+    val dataHoraAtual = System.currentTimeMillis()
+    val dataHoraFormata = SimpleDateFormat("EEEE (dd/MM/yyyy) 'às' HH:mm", Locale("pt", "BR"))
+    return dataHoraFormata.format(dataHoraAtual)
+}
+
+@Composable
+fun Titulo(texto: String, modifier: Modifier = Modifier) {
+    Text(text = texto, style = Typography.headlineLarge, modifier = modifier)
+}
+
+@Composable
+fun ItemDaLista(
+    item: ItemCompra,
+    aoMudarStatus: (item: ItemCompra) -> Unit = {},
+    aoRemoverItem: (item: ItemCompra) -> Unit = {},
+    aoEditarItem: (item: ItemCompra, novoTexto: String) -> Unit = {_, _ -> },
+    modifier: Modifier = Modifier
+) {
+    Column(verticalArrangement = Arrangement.Top, modifier = modifier) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            var textoEditado by rememberSaveable { mutableStateOf(item.texto) }
+            var edicao by rememberSaveable { mutableStateOf(false) }
+
+            Checkbox(
+                checked = item.foiComprado,
+                onCheckedChange = {
+                    aoMudarStatus(item)
+                },
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .requiredSize(24.dp)
+            )
+
+            if (edicao) {
+                OutlinedTextField(
+                    value = textoEditado,
+                    onValueChange = { textoEditado = it },
+                    modifier = Modifier.weight(1f),
+                    singleLine = true,
+                    shape = RoundedCornerShape(24.dp)
+                )
+
+                IconButton(
+                    onClick = {
+                        aoEditarItem(item, textoEditado)
+                        edicao = false
+                    }
+                ) {
+                    Icone(Icons.Default.Done, modifier = Modifier.size(16.dp))
+                }
+            } else {
+                Text(
+                    text = item.texto,
+                    modifier = Modifier.weight(1f),
+                    style = Typography.bodyMedium,
+                    textAlign = TextAlign.Start
+                )
+            }
+            IconButton(
+                onClick = { aoRemoverItem(item) },
+                modifier = Modifier.padding(end = 8.dp)
+            ) {
+                Icone(
+                    Icons.Default.Delete,
+                    modifier = Modifier
+                        .size(16.dp)
+                )
+            }
+            IconButton(
+                onClick = {
+                    edicao = true
+                }
+            ) {
+                Icone(Icons.Default.Edit, modifier = Modifier.size(16.dp))
+            }
+        }
+        Text(
+            item.datahora,
+            Modifier.padding(top = 8.dp),
+            style = Typography.labelSmall,
+        )
+    }
+}
+
+@Composable
+fun ImagemTopo(modifier: Modifier = Modifier) {
+    Image(
+        painter = painterResource(R.drawable.paperbagwithgroceries1),
+        contentDescription = null,
+        modifier = modifier.size(160.dp)
+    )
+}
+
+@Composable
+fun Icone(icone: ImageVector, modifier: Modifier = Modifier) {
+    Icon(icone, contentDescription = "Editar", modifier = modifier, tint = marinho)
+}
+
+@Composable
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello Fernando",
+        modifier = modifier
+    )
+}
+
+@Preview
+@Composable
+private fun AdicionarItemPreview() {
+    SuperComprasTheme {
+        AdicionarItem(aoSalvarItem = {})
+    }
+}
+
+@Preview
+@Composable
+fun ItemDaListaPreview() {
+    SuperComprasTheme {
+        ItemDaLista(item = ItemCompra("Suco", false, "Segunda-feira"))
+    }
+}
+
+@Preview
+@Composable
+fun IconeEditPreview() {
+    SuperComprasTheme {
+        Icone(icone = Icons.Default.Delete)
+    }
+}
+
+@Preview
+@Composable
+fun ImagemTopoPreview() {
+    SuperComprasTheme {
+        ImagemTopo()
+    }
+}
+
+@Preview
+@Composable
+fun TituloPreview() {
+    SuperComprasTheme {
+        Titulo(texto = "Lista de Compras")
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    SuperComprasTheme {
+        Greeting("Android")
+    }
+}
+
+data class ItemCompra(
+    val texto: String,
+    var foiComprado: Boolean = false,
+    val datahora: String
+)
