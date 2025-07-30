@@ -17,3 +17,5 @@ val erro = Color(0xFF893131)
 val marinho = Color(0xFF131730)
 val fundoTela = Color(0xFFFFFFFF)
 
+
+

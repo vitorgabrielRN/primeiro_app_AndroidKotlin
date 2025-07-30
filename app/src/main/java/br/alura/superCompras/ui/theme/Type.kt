@@ -1,6 +1,8 @@
 package br.alura.superCompras.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -20,7 +22,7 @@ val Typography = Typography(
         fontFamily = FontFamily.Monospace,
         fontWeight = FontWeight.Normal,
         color = marinho,
-        fontSize = 20.sp,
+        fontSize = 18.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
@@ -36,10 +38,12 @@ val Typography = Typography(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
         color = marinho,
-        fontSize = 20.sp,
-        lineHeight = 14.sp,
+        fontSize = 12.sp,
+        lineHeight = 20.sp,
         letterSpacing = 0.5.sp
     )
+
+
 
 
     /* Other default text styles to override
